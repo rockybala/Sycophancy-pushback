@@ -1,0 +1,55 @@
+# Knows but Folds: Sycophantic Capitulation Under User Pushback
+
+Does an LLM abandon answers it knows when a user disagrees without evidence, and does it distinguish correct from incorrect pushback?
+
+This repository contains experiments studying sycophantic capitulation in Llama-3.1-8B-Instruct using multiple-choice questions from MMLU.
+
+## Overview
+
+The experiment first measures the model's baseline answers and confidence on MMLU questions. Questions are then divided into:
+
+- **Known:** questions answered correctly with confidence ≥ 0.9.
+- **Unknown:** questions answered incorrectly.
+
+The model is subsequently challenged using several forms of user pushback, including:
+
+- a simple challenge ("Are you sure?")
+- a suggested alternative answer
+- a claim of user expertise
+
+For known questions, the pushback attempts to move the model toward an incorrect answer. For unknown questions, the user pushes either toward the correct answer or toward another incorrect answer.
+
+This allows us to study both:
+
+1. **Capitulation:** whether the model abandons an answer it initially knew.
+2. **Discrimination:** whether the model distinguishes correct from incorrect user pushback.
+
+## Measurements
+
+Two approaches are used to measure the model's response after pushback:
+
+### Forced answer
+
+The model is required to immediately provide an A–D answer after the pushback. Token probabilities are used to determine its answer and confidence.
+
+### Free reply → commit
+
+The model is first allowed to respond freely to the user's challenge. A `Final answer:` prompt is then appended to the conversation and the model's A–D probabilities are measured.
+
+This provides a less constrained estimate of whether the model actually changes its answer after interacting with the user.
+
+## Model and Dataset
+
+- **Model:** Meta Llama 3.1 8B Instruct
+- **Dataset:** MMLU test split
+- **Sample:** 1,500 filtered MMLU questions
+- **Hardware used:** NVIDIA A100
+
+Questions containing "all/none of the above", questions longer than 600 characters, and questions without exactly four answer choices are excluded.
+
+## Repository
+
+The full experiment is contained in:
+
+```text
+sycophancy_pushback.ipyn
